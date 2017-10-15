@@ -39,7 +39,7 @@ def formGraph(T,pos,mu,eta,seed=None):
     
     # connect nodes with edges
     G = nx.random_geometric_graph(n,eta,pos=pos)   
-    G = nx.DiGraph(G, weight=1)
+    G = nx.DiGraph(G)
     return G
 
 
@@ -103,7 +103,7 @@ def showPaths(G,pos,N,edgeProbs=1.0,path=None,visibleNodes=None,guards=None):
         #path_pairs = [ind2edge[i] for i in visiblePath]
         #path_colors = [edgeProbs[i] for i in visiblePath]
         edges = nx.draw_networkx_edges(G,pos,edge_color='b',width=1,
-                                       edge_cmap=plt.cm.RdYlGn,edgelist=path,arrows=False,edge_vmin=0.0,
+                                       edge_cmap=plt.cm.RdYlGn,edgelist=path,arrows=True,edge_vmin=0.0,
                                    edge_vmax=1.0)
     
     ## fig.colorbar(edges,label='??? graph')
@@ -135,9 +135,9 @@ plt.show()
 ## Add a sink, connect all spareTSV to it.
 ## pos = pos + [(1.5,.5)]
 for u,v in G.edges():
-    # h = np.array(G.node[u]['pos']) - np.array(G.node[v]['pos'])
-    # G[u][v]['weight'] = np.sqrt(np.dot(h,h))
-    G[u][v]['weight'] = 1
+    h = np.array(G.node[u]['pos']) - np.array(G.node[v]['pos'])
+    G[u][v]['weight'] = int(np.sqrt(np.dot(h,h))*100)
+    ## G[u][v]['weight'] = 1
     G[u][v]['capacity'] = r
 for i in range(N):
     G.node[i]['demand'] = -1
