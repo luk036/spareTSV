@@ -117,8 +117,8 @@ def showPaths(G,pos,N,edgeProbs=1.0,path=None,visibleNodes=None,guards=None):
 
 
 N = 155
-M = 20
-r = 8
+M = 40
+r = 4
 
 T = N+M
 xbase = 2
@@ -144,13 +144,19 @@ for i in range(N):
 for i in range(N,T):
     G.node[i]['demand'] = 0
 G.add_node(T, demand=N)
+# G.add_edges_from([(i, T) for i in range(N,T)]) # weight = 0
 for i in range (N,T):
     G.add_edge(i,T,capacity=r) # weight = 0
-flowCost, flowDict = nx.network_simplex(G)
-pathlist = [(u, v) for u in flowDict for v in flowDict[u] if flowDict[u][v] > 0 if v < T]
-#print(pathlist)
 
-pos2 = dict(enumerate(pos))
-G.remove_node(T)
-fig, ax = showPaths(G,pos2,N,path=pathlist)
-plt.show()
+try:
+    flowCost, flowDict = nx.network_simplex(G)
+    pathlist = [(u, v) for u in flowDict for v in flowDict[u] if flowDict[u][v] > 0 if v < T]
+    #print(pathlist)
+    pos2 = dict(enumerate(pos))
+    G.remove_node(T)
+    fig, ax = showPaths(G,pos2,N,path=pathlist)
+    plt.show()
+except nx.NetworkXUnfeasible:
+    print("Solution Infeasible!")
+
+
