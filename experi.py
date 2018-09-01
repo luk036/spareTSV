@@ -125,7 +125,7 @@ xbase = 2
 ybase = 3
 x = [i for i in vdcorput(T, xbase)]
 y = [i for i in vdcorput(T, ybase)]
-pos = zip(x,y)
+pos = list(zip(x,y))
 G = formGraph(T,pos,.12,1.6,seed=5)
 n = G.number_of_nodes()
 pos2 = dict(enumerate(pos))
