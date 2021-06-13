@@ -135,14 +135,14 @@ plt.show()
 ## Add a sink, connect all spareTSV to it.
 ## pos = pos + [(1.5,.5)]
 for u,v in G.edges():
-    h = np.array(G.node[u]['pos']) - np.array(G.node[v]['pos'])
+    h = np.array(pos[u]) - np.array(pos[v])
     G[u][v]['weight'] = int(np.sqrt(np.dot(h,h))*100)
     ## G[u][v]['weight'] = 1
     G[u][v]['capacity'] = r
 for i in range(N):
-    G.node[i]['demand'] = -1
+    G.nodes[i]['demand'] = -1
 for i in range(N,T):
-    G.node[i]['demand'] = 0
+    G.nodes[i]['demand'] = 0
 G.add_node(T, demand=N)
 # G.add_edges_from([(i, T) for i in range(N,T)]) # weight = 0
 for i in range (N,T):
