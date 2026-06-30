@@ -1,11 +1,7 @@
 # Show violations in spare TSV solution (OLD method, seed=99)
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 
 from spareTSV import formGraph, showPaths, vdcorput, setup_network_flow
 from digraphx.mcf import cycle_canceling_mcf
@@ -39,7 +35,7 @@ pos2 = dict(enumerate(pos))
 # Initial graph
 fig, ax = showPaths(gra, pos2, N)
 fig.savefig("spareTSV-seed99-initial.svg")
-plt.close(fig)
+plt.show()
 
 sink = setup_network_flow(gra, pos, primal_count=N, capacity=r)
 g, demands = nx_to_dict_graph(gra, sink)
@@ -82,15 +78,15 @@ for u in sorted(violators):
     edges = [(u, v) for (a, v) in pathlist if a == u]
     print(f"  node {u}: -> {edges}")
 
-    gra.remove_node(sink)
+gra.remove_node(sink)
 
-    fig, ax = showPaths(gra, pos2, N, path=good_path)
-    if bad_path:
-        nx.draw_networkx_edges(
-            gra, pos2, edgelist=bad_path,
-            edge_color="#ff00ff", width=2,
-            arrows=True, arrowstyle="->", arrowsize=12,
-            ax=ax,
-        )
-    fig.savefig("spareTSV-seed99-solution.svg")
-    plt.close(fig)
+fig, ax = showPaths(gra, pos2, N, path=good_path)
+if bad_path:
+    nx.draw_networkx_edges(
+        gra, pos2, edgelist=bad_path,
+        edge_color="#ff00ff", width=2,
+        arrows=True, arrowstyle="->", arrowsize=12,
+        ax=ax,
+    )
+fig.savefig("spareTSV-seed99-solution.svg")
+plt.show()
