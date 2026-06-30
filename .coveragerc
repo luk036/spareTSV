@@ -1,0 +1,23 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+source = spareTSV
+# omit = bad_file.py
+
+[paths]
+source =
+    src/
+    */site-packages/
+
+[report]
+exclude_lines =
+    pragma: no cover
+
+    def __repr__
+    if self\.debug
+
+    raise AssertionError
+    raise NotImplementedError
+
+    if 0:
+    if __name__ == .__main__.:

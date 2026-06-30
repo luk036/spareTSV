@@ -1,0 +1,9 @@
+name: spareTSV
+channels:
+  - conda-forge
+dependencies:
+  - pytest
+  - pytest-cov
+  - networkx
+  - numpy
+  - matplotlib
