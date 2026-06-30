@@ -1,8 +1,5 @@
-# Experiment: spare TSV network flow optimization using cycle-cancellation descent
+# Experiment: spare TSV (OLD method: MCF without vertex-disjoint constraint)
 
-import matplotlib
-
-matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from spareTSV import formGraph, showPaths, vdcorput
@@ -10,11 +7,6 @@ from digraphx.mcf import cycle_canceling_mcf
 
 
 def nx_to_dict_graph(gra, sink):
-    """Convert networkx graph to dict-of-dicts for cycle_canceling_mcf.
-
-    Extracts weight/capacity from edge data and demand from node data.
-    Excludes the sink node (added separately by setup logic).
-    """
     g = {}
     demands = {}
     for u in gra.nodes():
@@ -44,25 +36,21 @@ pos = list(zip(x, y))
 gra = formGraph(T, pos, 0.12, 1.6, seed=5)
 pos2 = dict(enumerate(pos))
 fig, ax = showPaths(gra, pos2, N)
-fig.savefig("spareTSV-initial.svg")
-plt.close(fig)
+plt.show()
 
-# Set up the network flow graph (weights, capacities, demands, sink)
 from spareTSV import setup_network_flow
 
 sink = setup_network_flow(gra, pos, primal_count=N, capacity=r)
 
-# Convert to dict-of-dicts format and solve via cycle-cancellation descent
 g, demands = nx_to_dict_graph(gra, sink)
-result = cycle_canceling_mcf(g, demands, sink=sink)
+result = cycle_canceling_mcf(g, demands)  # no sink → no constraint
 
 if result is None:
     print("Solution Infeasible!")
 else:
     flow_cost, flow_dict = result
-    print(f"Flow cost: {flow_cost}")
+    print(f"Flow cost (old): {flow_cost}")
 
-    # Extract path edges with positive flow, excluding sink
     pathlist = [
         (u, v)
         for u in flow_dict
@@ -70,7 +58,15 @@ else:
         if f > 0 and v != sink
     ]
 
+    # Count violations
+    outgoing = {}
+    for (u, v) in pathlist:
+        if u in outgoing:
+            print(f"  VIOLATION: node {u} -> {outgoing[u]} and -> {v}")
+        outgoing[u] = v
+    violations = len(pathlist) - len(outgoing)
+    print(f"Path edges: {len(pathlist)}, unique sources: {len(outgoing)}, violations: {violations}")
+
     gra.remove_node(sink)
     fig, ax = showPaths(gra, pos2, N, path=pathlist)
-    fig.savefig("spareTSV-solution.svg")
-    plt.close(fig)
+    plt.show()
