@@ -3,10 +3,10 @@
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # noqa: E402
+from digraphx.mcf import cycle_canceling_mcf  # noqa: E402
 
-from spareTSV import formGraph, showPaths, vdcorput
-from digraphx.mcf import cycle_canceling_mcf
+from spareTSV import formGraph, showPaths, setup_network_flow, vdcorput  # noqa: E402
 
 
 def nx_to_dict_graph(gra, sink):
@@ -48,8 +48,6 @@ fig.savefig("spareTSV-initial.svg")
 plt.close(fig)
 
 # Set up the network flow graph (weights, capacities, demands, sink)
-from spareTSV import setup_network_flow
-
 sink = setup_network_flow(gra, pos, primal_count=N, capacity=r)
 
 # Convert to dict-of-dicts format and solve via cycle-cancellation descent

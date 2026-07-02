@@ -45,10 +45,31 @@ def test_formGraph_reproducible(sample_positions):
     assert g1.number_of_edges() == g2.number_of_edges()
 
 
+def test_formGraph_no_seed(sample_positions):
+    gra = formGraph(12, sample_positions, 0.12, 1.6)
+    assert gra.number_of_nodes() == 12
+    assert gra.is_directed()
+
+
 def test_showPaths(small_graph, sample_positions):
     N = 9
     pos = dict(enumerate(sample_positions))
     fig, ax = showPaths(small_graph, pos, N)
+    assert fig is not None
+    assert ax is not None
+
+
+def test_showPaths_with_options(small_graph, sample_positions):
+    N = 9
+    pos = dict(enumerate(sample_positions))
+    edges = list(small_graph.edges())[:3]
+    edge_probs = [0.5] * small_graph.number_of_edges()
+    vis = list(range(9))
+    fig, ax = showPaths(
+        small_graph, pos, N,
+        edgeProbs=edge_probs, path=edges,
+        visibleNodes=vis, guards=[0, 1],
+    )
     assert fig is not None
     assert ax is not None
 

@@ -1,7 +1,11 @@
 # Test constraint at 10:1 ratio (N=30 primal, M=3 spare)
-import matplotlib; matplotlib.use("Agg")
-from spareTSV import formGraph, vdcorput, setup_network_flow
-from digraphx.mcf import cycle_canceling_mcf
+import matplotlib
+
+matplotlib.use("Agg")
+from digraphx.mcf import cycle_canceling_mcf  # noqa: E402
+
+from spareTSV import formGraph, setup_network_flow, vdcorput  # noqa: E402
+
 
 def stats(fd):
     pl = [(u, v) for u in fd for v, f in fd[u].items() if f > 0 and v != sink]
@@ -11,11 +15,10 @@ def stats(fd):
         in_d[v] = in_d.get(v, 0) + 1
     mo = sum(1 for n, c in out_d.items() if c > 1)
     mb = sum(
-        1
-        for n in set(in_d) | set(out_d)
-        if in_d.get(n, 0) > 1 and out_d.get(n, 0) > 1
+        1 for n in set(in_d) | set(out_d) if in_d.get(n, 0) > 1 and out_d.get(n, 0) > 1
     )
     return mo, mb
+
 
 N, M, r = 30, 3, 30  # 10:1 ratio, high capacity
 T = N + M

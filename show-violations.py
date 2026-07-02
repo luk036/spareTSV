@@ -2,9 +2,9 @@
 
 import matplotlib.pyplot as plt
 import networkx as nx
-
-from spareTSV import formGraph, showPaths, vdcorput, setup_network_flow
 from digraphx.mcf import cycle_canceling_mcf
+
+from spareTSV import formGraph, setup_network_flow, showPaths, vdcorput
 
 
 def nx_to_dict_graph(gra, sink):
@@ -45,10 +45,7 @@ flow_cost, flow_dict = result
 print(f"Flow cost: {flow_cost}")
 
 pathlist = [
-    (u, v)
-    for u in flow_dict
-    for v, f in flow_dict[u].items()
-    if f > 0 and v != sink
+    (u, v) for u in flow_dict for v, f in flow_dict[u].items() if f > 0 and v != sink
 ]
 
 # Identify violating edges (nodes with multiple outgoing edges)
@@ -83,9 +80,14 @@ gra.remove_node(sink)
 fig, ax = showPaths(gra, pos2, N, path=good_path)
 if bad_path:
     nx.draw_networkx_edges(
-        gra, pos2, edgelist=bad_path,
-        edge_color="#ff00ff", width=2,
-        arrows=True, arrowstyle="->", arrowsize=12,
+        gra,
+        pos2,
+        edgelist=bad_path,
+        edge_color="#ff00ff",
+        width=2,
+        arrows=True,
+        arrowstyle="->",
+        arrowsize=12,
         ax=ax,
     )
 fig.savefig("spareTSV-seed99-solution.svg")

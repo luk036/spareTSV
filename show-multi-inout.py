@@ -2,11 +2,9 @@
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
-
-from spareTSV import formGraph, showPaths, vdcorput, setup_network_flow
 from digraphx.mcf import cycle_canceling_mcf
 
+from spareTSV import formGraph, setup_network_flow, showPaths, vdcorput
 
 seed, N, M, r, mu, eta = 5, 155, 40, 4, 0.12, 1.1
 T = N + M
@@ -41,10 +39,7 @@ flow_cost, flow_dict = result
 print(f"Flow cost: {flow_cost}")
 
 pathlist = [
-    (u, v)
-    for u in flow_dict
-    for v, f in flow_dict[u].items()
-    if f > 0 and v != sink
+    (u, v) for u in flow_dict for v, f in flow_dict[u].items() if f > 0 and v != sink
 ]
 
 # Compute in/out degrees
@@ -56,7 +51,8 @@ for u, v in pathlist:
 
 # Find multi-in/out nodes
 bad_nodes = {
-    n for n in set(in_deg) | set(out_deg)
+    n
+    for n in set(in_deg) | set(out_deg)
     if in_deg.get(n, 0) > 1 and out_deg.get(n, 0) > 1
 }
 
@@ -87,26 +83,40 @@ fig, ax = showPaths(gra, pos2, N, path=normal_edges)
 # Draw incoming edges to bad nodes in cyan
 if bad_in_edges:
     nx.draw_networkx_edges(
-        gra, pos2, edgelist=bad_in_edges,
-        edge_color="#00ffff", width=2,
-        arrows=True, arrowstyle="->", arrowsize=12,
+        gra,
+        pos2,
+        edgelist=bad_in_edges,
+        edge_color="#00ffff",
+        width=2,
+        arrows=True,
+        arrowstyle="->",
+        arrowsize=12,
         ax=ax,
     )
 
 # Draw outgoing edges from bad nodes in magenta
 if bad_out_edges:
     nx.draw_networkx_edges(
-        gra, pos2, edgelist=bad_out_edges,
-        edge_color="#ff00ff", width=2,
-        arrows=True, arrowstyle="->", arrowsize=12,
+        gra,
+        pos2,
+        edgelist=bad_out_edges,
+        edge_color="#ff00ff",
+        width=2,
+        arrows=True,
+        arrowstyle="->",
+        arrowsize=12,
         ax=ax,
     )
 
 # Highlight bad nodes with black circles
 if bad_nodes:
     nx.draw_networkx_nodes(
-        gra, pos2, nodelist=list(bad_nodes),
-        node_color="#000000", node_size=50, ax=ax,
+        gra,
+        pos2,
+        nodelist=list(bad_nodes),
+        node_color="#000000",
+        node_size=50,
+        ax=ax,
     )
 
 fig.savefig("multi-inout-solution.svg")

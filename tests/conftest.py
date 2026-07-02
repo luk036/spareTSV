@@ -2,7 +2,7 @@
 
 import pytest
 
-from spareTSV import formGraph, vdc, vdcorput
+from spareTSV import formGraph, vdc
 
 
 @pytest.fixture

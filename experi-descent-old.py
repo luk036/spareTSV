@@ -1,9 +1,9 @@
 # Experiment: spare TSV (OLD method: MCF without vertex-disjoint constraint)
 
 import matplotlib.pyplot as plt
-
-from spareTSV import formGraph, showPaths, vdcorput
 from digraphx.mcf import cycle_canceling_mcf
+
+from spareTSV import formGraph, setup_network_flow, showPaths, vdcorput
 
 
 def nx_to_dict_graph(gra, sink):
@@ -38,8 +38,6 @@ pos2 = dict(enumerate(pos))
 fig, ax = showPaths(gra, pos2, N)
 plt.show()
 
-from spareTSV import setup_network_flow
-
 sink = setup_network_flow(gra, pos, primal_count=N, capacity=r)
 
 g, demands = nx_to_dict_graph(gra, sink)
@@ -60,12 +58,14 @@ else:
 
     # Count violations
     outgoing = {}
-    for (u, v) in pathlist:
+    for u, v in pathlist:
         if u in outgoing:
             print(f"  VIOLATION: node {u} -> {outgoing[u]} and -> {v}")
         outgoing[u] = v
     violations = len(pathlist) - len(outgoing)
-    print(f"Path edges: {len(pathlist)}, unique sources: {len(outgoing)}, violations: {violations}")
+    print(
+        f"Path edges: {len(pathlist)}, unique sources: {len(outgoing)}, violations: {violations}"
+    )
 
     gra.remove_node(sink)
     fig, ax = showPaths(gra, pos2, N, path=pathlist)
