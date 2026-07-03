@@ -6,7 +6,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from digraphx.mcf import cycle_canceling_mcf  # noqa: E402
 
-from spareTSV import formGraph, showPaths, setup_network_flow, vdcorput  # noqa: E402
+from spareTSV import formGraph, setup_network_flow, showPaths, vdcorput  # noqa: E402
 
 
 def nx_to_dict_graph(gra, sink):

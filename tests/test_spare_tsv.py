@@ -66,9 +66,13 @@ def test_showPaths_with_options(small_graph, sample_positions):
     edge_probs = [0.5] * small_graph.number_of_edges()
     vis = list(range(9))
     fig, ax = showPaths(
-        small_graph, pos, N,
-        edgeProbs=edge_probs, path=edges,
-        visibleNodes=vis, guards=[0, 1],
+        small_graph,
+        pos,
+        N,
+        edgeProbs=edge_probs,
+        path=edges,
+        visibleNodes=vis,
+        guards=[0, 1],
     )
     assert fig is not None
     assert ax is not None
