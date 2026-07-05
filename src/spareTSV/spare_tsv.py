@@ -1,5 +1,6 @@
 """Spare TSV network optimization utilities."""
 
+import math
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -17,8 +18,17 @@ def vdc(n, base=2):
 
 
 def vdcorput(n, base=2):
-    """Generate n Van der Corput vectors."""
+    """Generate n Van der Corput vectors as a list."""
     return [vdc(i, base) for i in range(n)]
+
+
+def vdcorput_iter(n, base=2):
+    """Generate n Van der Corput vectors lazily (generator).
+
+    Yields values one at a time instead of allocating a full list.
+    """
+    for i in range(n):
+        yield vdc(i, base)
 
 
 def formGraph(T, pos, mu, eta, seed=None):
@@ -85,17 +95,16 @@ def showPaths(gra, pos, N, edgeProbs=1.0, path=None, visibleNodes=None, guards=N
     alpha = 1.0 if path is None else 0.15
 
     # only display edges between non-dummy nodes
-    ind2edge = {i: e for i, e in enumerate(gra.edges())}
+    edge_list = list(gra.edges())
     visibleEdges = [
-        i
-        for i in range(gra.number_of_edges())
-        if ind2edge[i][0] in visibleNodes and ind2edge[i][1] in visibleNodes
+        e
+        for e in edge_list
+        if e[0] in visibleNodes and e[1] in visibleNodes
     ]
-    edgelist = [ind2edge[i] for i in visibleEdges]
 
     if isinstance(edgeProbs, float):
         edgeProbs = [edgeProbs] * gra.number_of_edges()
-    p = [edgeProbs[i] for i in visibleEdges]
+    p = [edgeProbs[i] for i, e in enumerate(edge_list) if e in visibleEdges]
 
     nx.draw_networkx_edges(
         gra,
@@ -104,7 +113,7 @@ def showPaths(gra, pos, N, edgeProbs=1.0, path=None, visibleNodes=None, guards=N
         width=1,
         edge_cmap=plt.cm.RdYlGn,
         arrows=False,
-        edgelist=edgelist,
+        edgelist=visibleEdges,
         edge_vmin=0.0,
         edge_vmax=1.0,
         ax=ax,
@@ -141,8 +150,9 @@ def setup_network_flow(gra, pos, primal_count, capacity):
     """
     total = gra.number_of_nodes()
     for u, v in gra.edges():
-        h = np.array(pos[u]) - np.array(pos[v])
-        gra[u][v]["weight"] = int(np.sqrt(np.dot(h, h)) * 100)
+        dx = pos[u][0] - pos[v][0]
+        dy = pos[u][1] - pos[v][1]
+        gra[u][v]["weight"] = int(math.sqrt(dx * dx + dy * dy) * 100)
         gra[u][v]["capacity"] = capacity
 
     for i in range(primal_count):
