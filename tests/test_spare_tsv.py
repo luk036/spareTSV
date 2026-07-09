@@ -10,6 +10,7 @@ from spareTSV import (
     vdc,
     vdcorput,
 )
+from spareTSV.spare_tsv import vdcorput_iter
 
 
 def test_vdc():
@@ -31,6 +32,12 @@ def test_vdcorput():
     result = vdcorput(5, base=2)
     assert len(result) == 5
     assert all(0 <= x < 1 for x in result)
+
+
+def test_vdcorput_iter():
+    result = list(vdcorput_iter(5, base=2))
+    assert len(result) == 5
+    assert result == vdcorput(5, base=2)
 
 
 def test_formGraph(sample_positions):
