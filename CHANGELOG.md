@@ -2,6 +2,11 @@
 
 All notable changes to spareTSV will be documented in this file.
 
+## Version 0.2 (2026-11-20)
+
+### Build & CI
+- **PyPI publish workflow**: Added the release-triggered publish workflow. (#14fef91)
+
 ## Version 0.1 (2026-10-09)
 
 Initial PyPI release of `spareTSV` — spare through-silicon-via (TSV) network optimization in Python.
